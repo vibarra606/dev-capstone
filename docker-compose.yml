@@ -3,7 +3,7 @@ version: '3.8'
 networks:
   isolated_lab_net:
     driver: bridge
-    internal: true # Makes sure we are out of external internet access to keep the network and project isolated
+    internal: true # Makes sure we are out of external internet access to keep the network and project isolated, set to host-only adapter
 
 services:
   attack-box:
@@ -15,7 +15,7 @@ services:
       - "80:80" # Our fake website will be inside this internal network
 
   defense-box:
-    image: wazuh/wazuh-manager:latest # This is for the  SIEM tasks we have later on the defense side of the project
+    image: wazuh/wazuh-manager:4.9.0 # This is for the  SIEM tasks we have later on the defense side of the project
     container_name: defense-container
     networks:
       - isolated_lab_net
