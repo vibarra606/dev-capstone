@@ -23,3 +23,10 @@ services:
       - "1514:1514" # Live feed of Windows VM sending security logs so we know our defense worked
     volumes:
       - ./defense-environment/wazuh-rules.xml:/var/ossec/etc/rules/local_rules.xml
+
+  business-box:
+    build: ./business-box
+    container_name: business-container
+    networks:
+      - isolated_lab_net
+  
