@@ -1,4 +1,3 @@
-
 networks:
   isolated_lab_net:
     driver: bridge
@@ -10,7 +9,9 @@ services:
     networks:
       - isolated_lab_net
     ports:
-      - "80:80" # Our fake website will be inside this internal network
+      - "80:5000" # Our fake website will be inside this internal network
+    volumes:
+      - shared-logs:/shared-logs # This is where we will store the logs from the attack box to be used by the defense box
 
   defense-box:
     image: wazuh/wazuh-manager:4.9.0 # This is for the  SIEM tasks we have later on the defense side of the project
@@ -27,4 +28,6 @@ services:
     container_name: business-container
     networks:
       - isolated_lab_net
-  
+
+volumes:
+  shared-logs:
