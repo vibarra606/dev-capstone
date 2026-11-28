@@ -1,9 +1,6 @@
-version: '3.8'
-
 networks:
   isolated_lab_net:
     driver: bridge
-    internal: true # Makes sure we are out of external internet access to keep the network and project isolated, set to host-only adapter
 
 services:
   attack-box:
@@ -12,7 +9,9 @@ services:
     networks:
       - isolated_lab_net
     ports:
-      - "80:80" # Our fake website will be inside this internal network
+      - "80:5000" # Our fake website will be inside this internal network
+    volumes:
+      - shared-logs:/shared-logs # This is where we will store the logs from the attack box to be used by the defense box
 
   defense-box:
     image: wazuh/wazuh-manager:4.9.0 # This is for the  SIEM tasks we have later on the defense side of the project
@@ -23,3 +22,12 @@ services:
       - "1514:1514" # Live feed of Windows VM sending security logs so we know our defense worked
     volumes:
       - ./defense-environment/wazuh-rules.xml:/var/ossec/etc/rules/local_rules.xml
+
+  business-box:
+    build: ./business-box
+    container_name: business-container
+    networks:
+      - isolated_lab_net
+
+volumes:
+  shared-logs:
